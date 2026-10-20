@@ -1,0 +1,601 @@
+{
+  "name": "LinkedIn Post Approval Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a Content Researcher Assistant at Agentic Vibe, an AI-first automation agency helping solopreneurs, creators, and digital-first founders grow their online presence — especially on LinkedIn — through scalable, hands-free content systems.\n\nYour task is to take the user-submitted topic received from our n8n form submission and refine it into a high-value, structured content blueprint that aligns with our brand pillars and resonates deeply with our audience. This output will later be expanded into a full LinkedIn post by another agent.\n\n📥 Incoming Topic to Process:\n{{ $json.Topic }}\n\n🔍 Strategic Alignment Check:\nEnsure the submitted topic ties into at least one of these core themes:\n- AI for Content Creation & Workflow Automation\n- LinkedIn Automation Tools, Tactics & Growth Strategies\n- Solopreneur Productivity Hacks Using AI & Automation\n- Systems Thinking for Scaling Personal Brands\n- The Future of Work, Creators, and Automated Influence\n- No-Code Tools for Content & Lead Gen Automation\n\n✅ Your Output Format:\nProcess the submitted topic and deliver the following structured blueprint:\n\nRefined Topic Title or Core Idea (1 sharp, compelling line)\n\nShort Rationale (1–2 sentences on why this topic matters right now for founders/creators)\n\nSuggested Angle or Hook (1 high-impact LinkedIn-style framing, pattern-interrupt, or contrarian take)\n\nKey Sub-Points / Execution Framework (2-3 bullet points outlining the logical flow or systemized steps the next agent should cover)\n\n💡 Style Guide:\n- Keep the output insightful, actionable, and future-minded.\n- Maintain founder-style energy: confident, sharp, and slightly contrarian when it adds value.\n- Avoid fluff, hype, or generic jargon — focus entirely on clarity, systemized insight, and practical utility.",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "id": "afbff3aa-8c94-4b92-b5e6-f6e9970e5a32",
+      "name": "Content topic generator2",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        -544,
+        64
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "id": "7ba3e425-243c-4aa2-821c-b99f20d63850",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        -640,
+        304
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "5Uc1rKZSZtfFJNx9",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "[{\n \"title\": \"AI as Your First Content Hire: Why Founders Shouldn't Wait to Outsource Creation\",\n            \"rationale\": \"Most solopreneurs delay content scaling because they think hiring a ghostwriter is the next step — but AI can handle 80% with proper systems. This shifts content from a creative bottleneck to a scalable growth lever.\",\n            \"hook\": \"Ghostwriters are outdated. Train GPT once, and it ships LinkedIn gold in your voice daily. Welcome to hands-free thought leadership.\"\n          }]"
+      },
+      "id": "76948bab-b50c-4d95-a48f-bed4639d8318",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        -368,
+        320
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a linkedin content creator and copywriter. Given the title {{ $json.output[0].title }}, the rationale {{ $json.output[0].rationale }}, suggested hook. Generate text content for a linkedin post. Also describe a suitable image for the post.",
+        "hasOutputParser": true,
+        "batching": {}
+      },
+      "id": "29b7351d-5feb-4f42-9b23-53f96a82c255",
+      "name": "Content creator",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "position": [
+        -96,
+        64
+      ],
+      "typeVersion": 1.7
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "id": "0068bdae-a33c-4a1c-9914-76f9df2e5034",
+      "name": "OpenAI Chat Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        -96,
+        304
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "5Uc1rKZSZtfFJNx9",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"post title\": \"Exciting New Feature Launch 🚀\",\n  \"post content\": \"After months of collaboration, testing, and fine-tuning, we're thrilled to introduce our latest product feature: Smart Insights. It helps users uncover meaningful patterns in their data with just a few clicks. This wouldn't have been possible without our incredible team and supportive community. We're excited for what's next — and we'd love your feedback!\",\n  \"image description\": \"A laptop screen showcasing the new Smart Insights dashboard with colorful charts and graphs, surrounded by a team clapping in the background.\"\n}"
+      },
+      "id": "b9326888-376b-4b33-94c5-ee64a09ff334",
+      "name": "Structured Output Parser1",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        128,
+        288
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an SEO specialist for LinkedIn. Your task is to generate highly relevant and effective hashtags for the following post. Consider the post's content, target audience, and current LinkedIn trends to maximize visibility and engagement.\n\n<post_title>{{ $json.output['post title'] }}</post_title>\n<post_content>{{ $json.output['post content'] }}</post_content>\n\nPlease generate:\n1. **3-5 broad, high-volume hashtags** (e.g., #AI, #Marketing, #Business)\n2. **3-5 niche-specific hashtags** that are directly relevant to the post's core topic (e.g., #SocialMediaAutomation, #ContentCreationAI, #LinkedInMarketingTips)\n3. **1-2 trending/topical hashtags** if applicable (e.g., #FutureOfWork, #DigitalTransformation)\n\nPresent them as a comma-separated list.",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "id": "d72feda5-d9e6-409d-bba3-8af8b053751f",
+      "name": "Hashtag generator /SEO",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        464,
+        336
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "id": "54a2a4de-87ad-4fd2-b130-7d2649268888",
+      "name": "OpenAI Chat Model2",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        336,
+        608
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "5Uc1rKZSZtfFJNx9",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"post title\": \"Exciting New Feature Launch 🚀\",\n  \"post content\": \"After months of collaboration, testing, and fine-tuning, we're thrilled to introduce our latest product feature: Smart Insights. It helps users uncover meaningful patterns in their data with just a few clicks. This wouldn't have been possible without our incredible team and supportive community. We're excited for what's next — and we'd love your feedback!\",\n  \"image description\": \"A laptop screen showcasing the new Smart Insights dashboard with colorful charts and graphs, surrounded by a team clapping in the background.\",\n\"Hashtags\":[\"#AI\",\"#Automation\"]\n}"
+      },
+      "id": "8ec300a4-e198-4a13-88db-8e6b3a8b8549",
+      "name": "Structured Output Parser2",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        768,
+        608
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "id": "53897b84-80e0-469a-84a5-6966d21df017",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        1216,
+        64
+      ],
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {
+        "authentication": "n8nUserAuth",
+        "formTitle": "Topic to post on linkedIn",
+        "formDescription": "Choose the topic to post on linkedin",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Topic",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        -928,
+        64
+      ],
+      "id": "b8282612-2bbd-4c67-af2e-80d58f481f90",
+      "name": "On form submission",
+      "webhookId": "23545e4f-b2b8-43a4-a3da-dcee14c82bf0"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "sendTo": "bvigneshwaran85@gmail.com",
+        "subject": "LinkedIn Content Review Approval Required!",
+        "message": "={{ $('Content creator').all().find(item => item.json.output?.['post content'])?.json.output['post content'] }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        352,
+        0
+      ],
+      "id": "cf610205-836c-405d-b34c-7f5f246c7ee5",
+      "name": "Send message and wait for response",
+      "webhookId": "5e56b1f1-17c1-4911-834d-f6e3d8d7d6f8",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "pY8nHM136uEv5Z23",
+          "name": "theaiceo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "model": "gpt-image-1",
+        "prompt": "=Generate an image for a linkedin post this is the description: {{ $json.output['image description'] }} .The images should be realistic for linkedin.",
+        "options": {}
+      },
+      "id": "085c941d-f149-4901-a272-cd6b3c96b5ba",
+      "name": "OpenAI1",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        496,
+        -400
+      ],
+      "typeVersion": 1.8,
+      "credentials": {
+        "openAiApi": {
+          "id": "5Uc1rKZSZtfFJNx9",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "person": "LoozB3-rby",
+        "text": "={{ $('Merge').all().find(item => item.json.output?.['post content'])?.json.output['post content'] }}",
+        "shareMediaCategory": "IMAGE",
+        "binaryPropertyName": "=data",
+        "additionalFields": {}
+      },
+      "id": "6a876921-9caa-4176-9ae6-518687b9faa1",
+      "name": "LinkedIn",
+      "type": "n8n-nodes-base.linkedIn",
+      "position": [
+        1504,
+        64
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "linkedInOAuth2Api": {
+          "id": "yWavmnpgrL5HkIqE",
+          "name": "LinkedIn account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst items = $input.all();\n\nreturn items.map(item => {\n  const json = { ...item.json };\n\n  // Rename the approval JSON field\n  if (json.data && typeof json.data.approved === 'boolean') {\n    json.approval = json.data;\n    delete json.data;\n  }\n\n  return {\n    ...item,\n    json,\n    binary: item.binary,\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1504,
+        -320
+      ],
+      "id": "8d17bf90-5567-412c-a0d8-12443863ce13",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "ce209c08-4c49-4d64-9005-a3fef5555b1a",
+              "leftValue": "={{ $json.data.approved }}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        576,
+        16
+      ],
+      "id": "6a193592-3b38-46b7-8245-de6fd03b74ec",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1uf94nVNqmmJwpBGi9XZTG4lN7-X0s3jAT6oybG3TraI",
+          "mode": "list",
+          "cachedResultName": "Approval-Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uf94nVNqmmJwpBGi9XZTG4lN7-X0s3jAT6oybG3TraI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uf94nVNqmmJwpBGi9XZTG4lN7-X0s3jAT6oybG3TraI/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "={{ $('Send message and wait for response').item.json.data.approved }}",
+            "Final Post": "={{ $('Content creator').item.json.output[\"post content\"] }}",
+            "Timestamp": "={{($json.data.respondedAt) }}",
+            "Post Title": "={{ $json.data.approved }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Post Title",
+              "displayName": "Post Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Final Post",
+              "displayName": "Final Post",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        832,
+        32
+      ],
+      "id": "ccb219cc-72aa-4769-a995-1ea78b27d331",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "sPz5wt465ZM2knqc",
+          "name": "AI CEO"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "LinkedIn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content creator": {
+      "main": [
+        [
+          {
+            "node": "Hashtag generator /SEO",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "OpenAI1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send message and wait for response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Content topic generator2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Content creator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Hashtag generator /SEO",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hashtag generator /SEO": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Content topic generator2": {
+      "main": [
+        [
+          {
+            "node": "Content creator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Content topic generator2",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Content creator",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser2": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Hashtag generator /SEO",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Content topic generator2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message and wait for response": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        []
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true
+  },
+  "versionId": "7a961171-441b-4aaa-9926-efb97d5bac3b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e4ba04d377b888c875d2adfa3d256b1635c2eb12b234903f0f6e364529c92666"
+  },
+  "nodeGroups": [],
+  "id": "gHujDUpGVAC8fuAQ",
+  "tags": []
+}

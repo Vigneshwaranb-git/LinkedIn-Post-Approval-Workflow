@@ -1,0 +1,299 @@
+{
+  "name": "MCP-SERVER",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "mymcpservers"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 2.1,
+      "position": [
+        -752,
+        -80
+      ],
+      "id": "ac8a6680-79ca-41e2-b9ce-96764b729f59",
+      "name": "MCP SERVER",
+      "webhookId": "4bcb357b-36d4-4108-9f59-5072121fffc8"
+    },
+    {
+      "parameters": {
+        "folderId": "1bWJzkW5YW8m7Z9c_hR6Ed89XHzCeL4J0",
+        "title": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Title', ``, 'string') }}"
+      },
+      "type": "n8n-nodes-base.googleDocsTool",
+      "typeVersion": 2,
+      "position": [
+        -816,
+        192
+      ],
+      "id": "b7f023b1-c79c-4cd4-97e1-54775d7a0582",
+      "name": "Create a document in Google Docs",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "LmURQCHQ2aN9NBjJ",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        -1136,
+        192
+      ],
+      "id": "3738b46b-fd78-4d8c-bda5-d7312fc7e83a",
+      "name": "Gmail",
+      "webhookId": "0d173105-105f-4039-896a-afe6ff5de706",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "pY8nHM136uEv5Z23",
+          "name": "theaiceo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Document', ``, 'string') }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Sheet', ``, 'string') }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -976,
+        192
+      ],
+      "id": "6bf3083b-f8bf-4619-bebf-9d5aef28480a",
+      "name": "GET",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "sPz5wt465ZM2knqc",
+          "name": "AI CEO"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Document', ``, 'string') }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Sheet', ``, 'string') }}",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -624,
+        208
+      ],
+      "id": "8d70e9bb-fe7a-41d3-96ce-2e7adc84146a",
+      "name": "Append",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "sPz5wt465ZM2knqc",
+          "name": "AI CEO"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Doc_ID_or_URL', ``, 'string') }}",
+        "simple": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Simplify', ``, 'boolean') }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocsTool",
+      "typeVersion": 2,
+      "position": [
+        -400,
+        192
+      ],
+      "id": "c6a1ff82-c6e0-472c-9129-cf0847a919cd",
+      "name": "Update a document in Google Docs",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "LmURQCHQ2aN9NBjJ",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "amazon",
+        "k": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search_Query__k_', ``, 'string') }}",
+        "additionalFields": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-serpapi.serpApiTool",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        192
+      ],
+      "id": "7113488f-b92f-445a-8ae2-8b5f4fe5f952",
+      "name": "Amazon search in SerpApi",
+      "credentials": {
+        "serpApi": {
+          "id": "CK6LirFUdp4CsMXG",
+          "name": "SerpApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "bvigneshwaran85@gmail.com",
+          "mode": "list",
+          "cachedResultName": "bvigneshwaran85@gmail.com"
+        },
+        "start": "={{$now}}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        -224,
+        192
+      ],
+      "id": "fadab655-ff20-47d5-8055-f329a31a3c8e",
+      "name": "Create an event in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "1zJ6ggDlfYiiwJZ0",
+          "name": "Google Calendar account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Create a document in Google Docs": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP SERVER",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP SERVER",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP SERVER",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP SERVER",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a document in Google Docs": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP SERVER",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Amazon search in SerpApi": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP SERVER",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an event in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP SERVER",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true
+  },
+  "versionId": "3e1f0b37-2e86-410c-b8b1-8db89d54e246",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e4ba04d377b888c875d2adfa3d256b1635c2eb12b234903f0f6e364529c92666"
+  },
+  "nodeGroups": [],
+  "id": "Gvc8WljWv4RCgZhc",
+  "tags": []
+}
